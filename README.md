@@ -3,6 +3,9 @@
 This is a module that takes a target application name, creates _standardized_ collections and deploys the target application to those collections.  
 This is not official MECM terminology, but we call these "deployment collections" because the collection's sole purpose is to be the single point of deployment for a given app, and any collections which should receive this deployment should simply be added as an include rule in the collection's membership rules. As described on the wiki page above, this prevents the same application from being redundantly deployed to many scattered collections.  
 
+# Org-specific warning
+Note: this module is currently written specifically for use in the College of Engineering of the University of Illinois. It's published mostly for reference and requires refactoring for use in other organizations.  
+
 ### Behavior
 
 - By default, the module creates two collections, one for an "Available" purpose deployment, and one for a "Required" purpose deployment. This behavior can be changed with the parameters documented below.  
