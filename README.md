@@ -8,7 +8,10 @@ Note: this module is currently written specifically for use in the College of En
 
 ### Behavior
 
-- By default, the module creates two collections, one for an "Available" purpose deployment, and one for a "Required" purpose deployment. This behavior can be changed with the parameters documented below.  
+- By default, the module creates nothing; you must specify one or more of the following switch parameters to create the relevant collection(s)/deployment(s).
+  - `-Available`: Creates an Available collection with the `Install` action.
+  - `-Required`: Creates a Required collection with the `Install` action.
+  - `-Uninstall`: Creates a Required collection with the `Uninstall` action.
 - All collections will be created with a standard membership evaluation schedule of 1am daily.  
 - All deployments will be configured to respect supersedence, if the app package has supersedence configured. If it doesn't, then you will see a benign warning that supersedence conditions were not met.  
   - Supersedence is preferred. If you must deploy without supersedence, please do so manually.  
@@ -21,9 +24,9 @@ Note: this module is currently written specifically for use in the College of En
 
 ### Example usage
 
-1. Download `New-CMOrgModelDeploymentCollection.psm1` to `$HOME\Documents\WindowsPowerShell\Modules\New-CMOrgModelDeploymentCollection\New-CMOrgModelDeploymentCollection.psm1`.
+1. Download `New-CMOrgModelDeploymentCollection.psm1` to the appropriate subdirectory of your PowerShell [modules directory](https://github.com/engrit-illinois/how-to-install-a-custom-powershell-module).
 2. Make sure to distribute the app to your DPs/DP group first.
-3. Run it, e.g.: `New-CMOrgModelDeploymentCollection -App "Slack - Latest"`
+3. Run it, e.g.: `New-CMOrgModelDeploymentCollection -App "Slack - Latest" -Available`
 4. Take note of the output logged to the console.
 
 ### Parameters
@@ -38,17 +41,19 @@ If specified, the behavior will change per the following:
 - The created collections will have a name format of `UIUC-ENGR-IS Deploy <app> (<purpose>)` instead of `UIUC-ENGR-Deploy <app> (<purpose>)`.  
 - The created collections will have a limiting collection of `UIUC-ENGR-Instructional`, instead of `UIUC-ENGR-All Systems`.
 
-#### -SkipAvailable
+#### -Available
 Optional switch.  
-If specified, creation of the "Available" deployment/collection will be skipped.  
+If specified, an "Available" deployment/collection with the "Install" action will be created.  
+Collection will be named like `UIUC-ENGR-IS Deploy <app> (Available)`.  
 
 #### -SkipRequired
 Optional switch.  
-If specified, creation of the "Required" deployment/collection will be skipped.  
+If specified, a "Required" deployment/collection with the "Install" action will be created.  
+Collection will be named like `UIUC-ENGR-IS Deploy <app> (Required)`.  
 
 #### -Uninstall
 Optional switch.  
-If specified, skips creation of "Available" and "Required" collections/deployments with "Install" action, and instead creates one "Required" collection/deployment with "Uninstall" action.  
+If specified, a "Required" collection/deployment with the "Uninstall" action will be created.  
 Collection will be named like `UIUC-ENGR-IS Uninstall <app> (Required)`.  
 
 #### -Prefix

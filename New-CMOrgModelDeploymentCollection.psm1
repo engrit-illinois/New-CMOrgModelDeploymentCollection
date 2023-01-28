@@ -10,9 +10,9 @@ function New-CMOrgModelDeploymentCollection {
 		
 		[switch]$ISOnly,
 		
-		[switch]$SkipAvailable,
+		[switch]$Available,
 		
-		[switch]$SkipRequired,
+		[switch]$Required,
 		
 		[switch]$Uninstall,
 		
@@ -31,11 +31,32 @@ function New-CMOrgModelDeploymentCollection {
 		[string]$CMPSModulePath="$($ENV:SMS_ADMIN_UI_PATH)\..\ConfigurationManager.psd1"
 	)
 	
-	function log($msg) {
+	function log {
+		param(
+			[string]$msg,
+			[int]$L
+		)
+		for($i = 0; $i -lt $L; $i += 1) {
+			$msg = "    $msg"
+		}
 		$ts = Get-Date -Format "yyyy-MM-dd HH:mm:ss:ffff"
 		Write-Host "[$ts] $msg"
 	}
 
+	function Test-SupportedPowershellVersion {
+		log "This custom module (and the overall ConfigurationManager Powershell module) only support Powershell v5.1. Checking Powershell version..."
+		
+		$ver = $Host.Version
+		log "Powershell version is `"$($ver.Major).$($ver.Minor)`"." -L 1
+		if(
+			($ver.Major -eq 5) -and
+			($ver.Minor -eq 1)
+		) {
+			return $true
+		}
+		return $false
+	}
+	
 	function Prep-MECM {
 		log "Preparing connection to MECM..."
 		$initParams = @{}
@@ -48,32 +69,99 @@ function New-CMOrgModelDeploymentCollection {
 			New-PSDrive -Name $SiteCode -PSProvider CMSite -Root $Provider @initParams
 		}
 		Set-Location "$($SiteCode):\" @initParams
-		log "Done prepping connection to MECM."
+		log "Done prepping connection to MECM." -L 1
 	}
 	
 	function App-Exists {
 		log "Checking that specified application exists..."
 		$appResult = Get-CMApplication -Fast -Name $App
 		if($appResult) {
-			log "    Result returned."
+			log "Result returned." -L 1
 			if($appResult.LocalizedDisplayName -eq $App) {
-				log "    Looks good."
+				log "Looks good." -L 1
 				$exists = $true
 			}
 			else {
-				log "    Result does not contain expected data!"
+				log "Result does not contain expected data!" -L 1
 				log ($result | Out-String)
 			}
 		}
 		else {
-			log "No result was returned! Are you sure this app exists, and is an app (as opposed to a package)?"
+			log "No result was returned! Are you sure this app exists, and is an app (as opposed to a package)?" -L 1
 		}
 		$exists
 	}
+	
+	function Get-AppName {
+		log "Getting name of underlying application..." -L 1
 		
-	function New-Coll($type, $collNameBase, $limitingColl, $sched) {
-		# Make new collection
+		$appName = $App.Replace($Prefix,"")
+		$regex = "$($Prefix)-*"
+		if($App -match $regex) {
+			log "App has `"$Prefix`" prefix. Removing this and taking the core app name: `"$appName`"." -L 2
+		}
+		else {
+			log "App does not have `"$Prefix`" prefix. Probably a campus app." -L 2
+		}
 		
+		log "App name: `"$appName`"." -L 2
+		
+		$appName
+	}
+	
+	function Get-BaseCollName($appName, $action) {
+		
+		log "Getting base name of new collection..." -L 1
+		
+		$collNamePrefix = "$($Prefix)"
+		if($ISOnly) {
+			log "-ISOnly was specified." -L 2
+			$collNamePrefix = "$($Prefix)IS "
+		}
+		else {
+			log "-ISOnly was not specified." -L 2
+		}
+		
+		$collNamePrefixAction = "$($collNamePrefix)Deploy"
+		if($action -eq "Uninstall") {
+			$collNamePrefixAction = "$($collNamePrefix)Uninstall"
+		}
+		
+		$collNameBase = "$collNamePrefixAction $appName"
+		log "New collection's base name will be `"$collNameBase (<purpose>)`"." -L 2
+		
+		$collNameBase
+	}
+	
+	function Get-LimitingColl {
+		log "Getting name of appropriate limiting collection..." -L 1
+		
+		$limitingColl = "$($Prefix)All Systems"
+		if($ISOnly) {
+			$limitingColl = "$($Prefix)Instructional"
+		}
+		
+		log "Limiting collection will be `"$limitingColl`"." -L 2
+		
+		$limitingColl
+	}
+	
+	# Builds schedule object to send to New-CMDeviceCollection
+	# Hard coded to be 1am daily, as defined by the design decisions documented on the wiki
+	function Get-Sched {
+		log "Building schedule object for new collection's membership evaluation schedule (i.e. daily at 1am)..." -L 1
+		
+		$schedStartDate = Get-Date -Format "yyyy-MM-dd"
+		$schedStartTime = "01:00"
+		$sched = New-CMSchedule -Start "$schedStartDate $schedStartTime" -RecurInterval "Days" -RecurCount 1
+		
+		$sched
+	}
+		
+	function New-Coll($type) {
+		log "Creating `"$type`" collection/deployment..."
+		
+		# Define "action" and "purpose" (in MECM parlance) for new deployment
 		if($type -eq "Available") {
 			$action = "Install"
 			$purpose = "Available"
@@ -89,186 +177,102 @@ function New-CMOrgModelDeploymentCollection {
 		else {
 			throw "Incorrect type sent to New-Coll function!"
 		}
+		log "Purpose: `"$purpose`"." -L 1
+		log "Action: `"$action`"." -L 1
 		
+		# Get core app name
+		$appName = Get-AppName
+		
+		# Build base name of collection
+		$collNameBase = Get-BaseCollName $appName $action
+		
+		# Build full name of collection
 		$coll = "$collNameBase ($purpose)"
-		log "Creating new `"$purpose`" collection: `"$coll`"..."
+		log "New collection's full name will be `"$coll`"." -L 1
+		
+		# Get name of appropriate limiting collection
+		$limitingColl = Get-LimitingColl
+		
+		# Build membership evaluation schedule
+		$sched = Get-Sched
+		
+		# Make new collection
+		log "Creating new collection: `"$coll`"..." -L 1
 		$collResult = New-CMDeviceCollection -Name $coll -LimitingCollectionName $limitingColl -RefreshType "Periodic" -RefreshSchedule $sched
 		
 		if($collResult) {
-			log "    Result returned"
+			log "Result returned" -L 2
 			if($collResult.Name -eq $coll) {
-				log "    Looks successful."
+				log "Looks successful." -L 3
 			}
 			else {
-				log "    Result does not contain expected data!"
+				log "Result does not contain expected data!" -L 3
 				log ($collResult | Out-String)
 			}
 		}
 		else {
-			log "    No result was returned! Something went wrong :/"
+			log "No result was returned! Something went wrong :/" -L 2
 		}
 		
-		log ""
-		
 		# Wait to make sure collection is created before trying to deploy to it
-		log "Waiting $DeploymentDelaySec seconds before deploying to new collection..."
+		log "Waiting $DeploymentDelaySec seconds before deploying to new collection..." -L 1
 		Start-Sleep -Seconds 10
 		
-		log ""
-		
 		# Make deployment to new collection
-		log "Deploying app `"$appname`" as `"$purpose`" to collection `"$coll`"..."
-		
+		log "Creating deployment..." -L 1
 		$depResult = New-CMApplicationDeployment -Name $App -CollectionName $coll -DeployAction $action -DeployPurpose $purpose -UpdateSupersedence $true
 		
 		if($depResult) {
-			log "    Result returned"
+			log "Result returned" -L 2
 			if($depResult.AssignmentName -eq "$($App)_$($coll)_$action") {
-				log "    Looks successful."
+				log "Looks successful." -L 3
 			}
 			else {
-				log "    Result does not contain expected data!"
+				log "Result does not contain expected data!" -L 3
 				log ($depResult | Out-String)
 			}
 		}
 		else {
-			log "    No result was returned! Something went wrong :/"
+			log "No result was returned! Something went wrong :/" -L 2
 		}
-	}
-	
-	function Get-AppName {
-		$appName = $App.Replace($Prefix,"")
-		$regex = "$($Prefix)-*"
-		if($App -match $regex) {
-			log "App has `"$Prefix`" prefix. Removing this and taking the core app name: `"$appName`"."
-		}
-		else {
-			log "App does not have `"$Prefix`" prefix. Probably a campus app."
-		}
-		
-		$appName
-	}
-	
-	function Get-BaseCollName($appName) {
-		$collNamePrefix = "$($Prefix)"
-		if($ISOnly) {
-			$collNamePrefix = "$($Prefix)IS "
-		}
-		
-		$collNamePrefixAction = "$($collNamePrefix)Deploy"
-		if($Uninstall) {
-			$collNamePrefixAction = "$($collNamePrefix)Uninstall"
-		}
-		
-		$collNameBase = "$collNamePrefixAction $appName"
-		
-		$collNameBase
-	}
-	
-	function Get-LimitingColl {
-		$limitingColl = "$($Prefix)All Systems"
-		if($ISOnly) {
-			$limitingColl = "$($Prefix)Instructional"
-		}
-		
-		$limitingColl
-	}
-	
-	# Builds schedule object to send to New-CMDeviceCollection
-	# Hard coded to be 1am daily, as defined by the design decisions documented on the wiki
-	function Get-Sched {
-		$schedStartDate = Get-Date -Format "yyyy-MM-dd"
-		$schedStartTime = "01:00"
-		$sched = New-CMSchedule -Start "$schedStartDate $schedStartTime" -RecurInterval "Days" -RecurCount 1
-		
-		$sched
-	}
-	
-	function Test-SupportedPowershellVersion {
-		log "This custom module (and the overall ConfigurationManager Powershell module) only support Powershell v5.1. Checking Powershell version..."
-		
-		$ver = $Host.Version
-		log "Powershell version is `"$($ver.Major).$($ver.Minor)`"."
-		if(
-			($ver.Major -eq 5) -and
-			($ver.Minor -eq 1)
-		) {
-			return $true
-		}
-		return $false
 	}
 	
 	function Do-Stuff {
-		log ""
 		
 		# Check that supported Powershell version is being used
 		if(Test-SupportedPowershellVersion) {
 			
 			$myPWD = $pwd.path
 			Prep-MECM
-			log ""
 		
 			# Check that the specified app exists
 			$exists = App-Exists
 			
+			# TODO: Check if app is distributed
+			# https://github.com/engrit-illinois/New-CMOrgModelDeploymentCollection/issues/3
+			
 			if($exists) {
-			
-				log ""
-			
-				# Get core app name
-				$appName = Get-AppName
-				
-				log ""
-				
-				# Some logging
-				if($ISOnly) {
-					log "-ISOnly was specified."
-				}
-				else {
-					log "-ISOnly was not specified."
-				}
-				
-				# Build base name of new collection(s) and limiting collection name
-				$collNameBase = Get-BaseCollName $appName
-				log "    Collection name(s) will be `"$collNameBase (<purpose>)`"."
-				
-				$limitingColl = Get-LimitingColl
-				log "    Limiting collection(s) will be `"$limitingColl`"."
-				
-				log ""
-				
-				# Build membership evaluation schedule
-				$sched = Get-Sched
-				
-				# Logic for which collections/deployments to create
-				if(!$Uninstall) {
-					if(!$SkipAvailable) {
-						New-Coll "Available" $collNameBase $limitingColl $sched
-					}
-					else {
-						log "-SkipAvailable was specified. Skipping creation of `"Available`" collection/deployment."
-					}
 					
-					log ""
-					
-					if(!$SkipRequired) {
-						New-Coll "Required" $collNameBase $limitingColl $sched
-					}
-					else {
-						log "-SkipRequired was specified. Skipping creation of `"Required`" collection/deployment."
-					}
+				# Create specified collections/deployments
+				if($Available) {
+					New-Coll "Available"
 				}
-				else {
-					New-Coll "Uninstall" $collNameBase $limitingColl $sched
+				if($Required) {
+					New-Coll "Required"
+				}
+				if($Uninstall) {
+					New-Coll "Uninstall"
+				}
+				
+				if((-not $Available) -and (-not $Required) -and (-not $Uninstall)) {
+					log "You must specify at least one of the following parameters: -Available, -Required, -Uninstall"
 				}
 			}
 			
-			log ""
 			Set-Location $myPWD
 		}
 	}
 	
 	Do-Stuff
 	log "EOF"
-	log ""
 }
