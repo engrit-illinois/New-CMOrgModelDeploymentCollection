@@ -57,11 +57,11 @@ Optional switch.
 If specified, a "Required" collection/deployment with the "Uninstall" action will be created.  
 Collection will be named like `UIUC-ENGR-IS Uninstall <app> (Required)`.  
 
-### -MoveCollectionsToFolder
+#### -MoveCollectionsToFolder
 Optional switch.  
 If specified, (all of) the created collections will be moved to the folder specified by `-CollectionsFolder`, after the deployment has been created.  
 
-### -CollectionsFolder
+#### -CollectionsFolder
 Optional string.  
 The folder to which created collections will be moved, if `-MoveCollectionsToFolder` is specified.  
 Default is `\DeviceCollection\UIUC-ENGR\Instructional\Deployment Collections\Software\Installs`, because that is the most common use case.  
