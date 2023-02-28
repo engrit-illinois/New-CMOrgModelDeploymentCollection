@@ -16,6 +16,10 @@ function New-CMOrgModelDeploymentCollection {
 		
 		[switch]$Uninstall,
 		
+		[switch]$MoveCollectionsToFolder,
+		
+		[string]$CollectionsFolder = "\DeviceCollection\UIUC-ENGR\Instructional\Deployment Collections\Software\Installs",
+		
 		# Prefix that all unit's apps and collections have
 		# This is probably unique to the UofI environment
 		# Script assumes this is consistent
@@ -237,6 +241,13 @@ function New-CMOrgModelDeploymentCollection {
 		}
 		else {
 			log "No result was returned! Something went wrong :/" -L 2
+		}
+		
+		# Move to collection to specified folder if requested
+		if($MoveCollectionsToFolder) {
+			$folderPath = "$($SiteCode):$($CollectionsFolder)"
+			log "-MoveCollectionsToFolder was specified. Moving new collection to `"$folderPath`"..." -L 1
+			Move-CMObject -InputObject $collResult -FolderPath $folderPath
 		}
 	}
 	

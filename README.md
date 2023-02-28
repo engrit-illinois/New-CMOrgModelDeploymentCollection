@@ -17,9 +17,10 @@ Note: this module is currently written specifically for use in the College of En
   - Supersedence is preferred. If you must deploy without supersedence, please do so manually.  
 - By default, the created collections will have a limiting collection of `UIUC-ENGR-All Systems`, unless the `-ISOnly` switch parameter is specified.  
 - Created collections will have a standard name format of `UIUC-ENGR-Deploy <app> (<purpose>)`, unless the `-ISOnly` switch parameter is specified.  
-- Created collections will show up in the root of `\Assets and Compliance\Overview\Device Collections`. It is possible to move existing collections (and other objects) via the ConfigurationManager Powershell module (via `Move-CMObject`), but this has not been implemented yet. See [issue #2](https://github.com/engrit-illinois/New-CMOrgModelDeploymentCollection/issues/2). For now, you must manually move the newly-created collections to the appropriate folder using the admin console.  
-  - For org-level collections, this is the appropriate subfolder of `\Assets and Compliance\Overview\Device Collections\UIUC-ENGR\Org shared collections\Deployments`.
-  - For IS collections, this is `\Assets and Compliance\Overview\Device Collections\UIUC-ENGR\Instructional\Deployment Collections\Software\Installs`.
+- By default, created collections will show up in the root of `\Assets and Compliance\Overview\Device Collections`.
+  - Specifying the `-MoveCollectionsToFolder` switch and `-CollectionsFolder` parameter will automatically move (all) the created collections to the specified folder.
+  - For org-level collections, the appropriate folder is `\DeviceCollection\UIUC-ENGR\Org shared collections\Deployments`.
+  - For IS collections, the appropriate folder is `\DeviceCollection\UIUC-ENGR\Instructional\Deployment Collections\Software\Installs`.
 - Note: The target app must be distributed to your distribution point before running this module to create collections. If it's not, the collections will be created, but the deployments to those collections will not. If this happens, simply delete the newly-created collections, distribute the app, and run the module again.
 
 ### Example usage
@@ -55,6 +56,16 @@ Collection will be named like `UIUC-ENGR-IS Deploy <app> (Required)`.
 Optional switch.  
 If specified, a "Required" collection/deployment with the "Uninstall" action will be created.  
 Collection will be named like `UIUC-ENGR-IS Uninstall <app> (Required)`.  
+
+### -MoveCollectionsToFolder
+Optional switch.  
+If specified, the created collections will be moved to the folder specified by `-CollectionsFolder`, after the deployment has been created.  
+
+### -CollectionsFolder
+Optional string.  
+The folder to which created collections will be moved, if `-MoveCollectionsToFolder` is specified.  
+Default is `\DeviceCollection\UIUC-ENGR\Instructional\Deployment Collections\Software\Installs`, because that is the most common use case.  
+The actual folder path which gets used is based on this value as well as the value of `-SiteCode`, e.g. `MP0:\DeviceCollection\UIUC-ENGR\etc...`.  
 
 #### -Prefix
 Optional string.  
