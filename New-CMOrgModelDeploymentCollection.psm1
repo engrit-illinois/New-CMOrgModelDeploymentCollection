@@ -202,6 +202,9 @@ function New-CMOrgModelDeploymentCollection {
 		
 		if($collResult) {
 			log "Result returned" -L 2
+			log "Collection name: `"$($collResult.Name)`"" -L 3
+			log "Collection ID: `"$($collResult.CollectionID)`"" -L 3
+			log "Limiting collection: `"$($collResult.LimitToCollectionName)`"" -L 3
 			if($collResult.Name -eq $coll) {
 				log "Looks successful." -L 3
 			}
