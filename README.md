@@ -59,7 +59,7 @@ Collection will be named like `UIUC-ENGR-IS Uninstall <app> (Required)`.
 
 #### -MoveCollectionsToFolder
 Optional switch.  
-If specified, (all of) the created collections will be moved to the folder specified by `-CollectionsFolder`, after the deployment has been created.  
+If specified, (all of) the created collections will be moved to the folder specified by `-CollectionsFolder`, after their deployment has been created.  
 
 #### -CollectionsFolder
 Optional string.  
