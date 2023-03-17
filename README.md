@@ -23,6 +23,9 @@ Note: this module is currently written specifically for use in the College of En
   - For IS collections, the appropriate folder is `\DeviceCollection\UIUC-ENGR\Instructional\Deployment Collections\Software\Installs`.
 - Note: The target app must be distributed to your distribution point before running this module to create collections. If it's not, the collections will be created, but the deployments to those collections will not. If this happens, simply delete the newly-created collections, distribute the app, and run the module again.
 
+### Requirements
+- Only supports PowerShell 5.1.
+
 ### Example usage
 
 1. Download `New-CMOrgModelDeploymentCollection.psm1` to the appropriate subdirectory of your PowerShell [modules directory](https://github.com/engrit-illinois/how-to-install-a-custom-powershell-module).
