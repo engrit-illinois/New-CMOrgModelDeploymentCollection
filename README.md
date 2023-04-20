@@ -3,10 +3,10 @@
 This is a module that takes a target application name, creates _standardized_ collections and deploys the target application to those collections.  
 This is not official MECM terminology, but we call these "deployment collections" because the collection's sole purpose is to be the single point of deployment for a given app, and any collections which should receive this deployment should simply be added as an include rule in the collection's membership rules. As described on the wiki page above, this prevents the same application from being redundantly deployed to many scattered collections.  
 
-# Org-specific warning
+### Org-specific warning
 Note: this module is currently written specifically for use in the College of Engineering of the University of Illinois. It's published mostly for reference and requires refactoring for use in other organizations.  
 
-### Behavior
+# Behavior
 
 - By default, the module creates nothing; you must specify one or more of the following switch parameters to create the relevant collection(s)/deployment(s).
   - `-Available`: Creates an Available collection with the `Install` action.
@@ -23,77 +23,77 @@ Note: this module is currently written specifically for use in the College of En
   - For IS collections, the appropriate folder is `\DeviceCollection\UIUC-ENGR\Instructional\Deployment Collections\Software\Installs`.
 - Note: The target app must be distributed to your distribution point before running this module to create collections. If it's not, the collections will be created, but the deployments to those collections will not. If this happens, simply delete the newly-created collections, distribute the app, and run the module again.
 
-### Requirements
+# Requirements
 - Only supports PowerShell 5.1.
 
-### Example usage
+# Example usage
 
 1. Download `New-CMOrgModelDeploymentCollection.psm1` to the appropriate subdirectory of your PowerShell [modules directory](https://github.com/engrit-illinois/how-to-install-a-custom-powershell-module).
 2. Make sure to distribute the app to your DPs/DP group first.
 3. Run it, e.g.: `New-CMOrgModelDeploymentCollection -App "Slack - Latest" -Available`
 4. Take note of the output logged to the console.
 
-### Parameters
+# Parameters
 
-#### -App
+### -App
 Required string.  
 The exact name of the application package for which to create collections and which to deploy to those collections.  
 
-#### -ISOnly
+### -ISOnly
 Optional switch.  
 If specified, the behavior will change per the following:
 - The created collections will have a name format of `UIUC-ENGR-IS Deploy <app> (<purpose>)` instead of `UIUC-ENGR-Deploy <app> (<purpose>)`.  
 - The created collections will have a limiting collection of `UIUC-ENGR-Instructional`, instead of `UIUC-ENGR-All Systems`.
 
-#### -Available
+### -Available
 Optional switch.  
 If specified, an "Available" deployment/collection with the "Install" action will be created.  
 Collection will be named like `UIUC-ENGR-IS Deploy <app> (Available)`.  
 
-#### -SkipRequired
+### -SkipRequired
 Optional switch.  
 If specified, a "Required" deployment/collection with the "Install" action will be created.  
 Collection will be named like `UIUC-ENGR-IS Deploy <app> (Required)`.  
 
-#### -Uninstall
+### -Uninstall
 Optional switch.  
 If specified, a "Required" collection/deployment with the "Uninstall" action will be created.  
 Collection will be named like `UIUC-ENGR-IS Uninstall <app> (Required)`.  
 
-#### -MoveCollectionsToFolder
+### -MoveCollectionsToFolder
 Optional switch.  
 If specified, (all of) the created collections will be moved to the folder specified by `-CollectionsFolder`, after their deployment has been created.  
 
-#### -CollectionsFolder
+### -CollectionsFolder
 Optional string.  
 The folder to which created collections will be moved, if `-MoveCollectionsToFolder` is specified.  
 Default is `\DeviceCollection\UIUC-ENGR\Instructional\Deployment Collections\Software\Installs`, because that is the most common use case.  
 The actual folder path which gets used is based on this value as well as the value of `-SiteCode`, e.g. `MP0:\DeviceCollection\UIUC-ENGR\etc...`.  
 
-#### -Prefix
+### -Prefix
 Optional string.  
 Specifies the prefix which the script assumes that all collections and apps have.  
 Default value is `UIUC-ENGR-`.  
 Script behavior is undefined if your unit's collections/deployments do not use a consistent prefix.  
 This prefix methodology is probably somewhat unique to the mutli-tenant design of the UofI MECM infrastructure.  
 
-#### - DeploymentDelaySec
+### - DeploymentDelaySec
 Optional integer.  
 The number of seconds to wait after creating a collection to deploy the app to that collection.  
 Default is `10`.  
 If you are getting errors with deployments, raise this value to e.g. `30` or so. It's possible MECM is being slow and not recognizing that the newly created collection exists before the script tries to deploy to it.  
 
-#### -SiteCode
+### -SiteCode
 Optional string. Recommend leaving default.  
 The site code of the MECM site to connect to.  
 Default is `MP0`.  
 
-#### -Provider
+### -Provider
 Optional string. Recommend leaving default.  
 The SMS provider machine name.  
 Default is `sccmcas.ad.uillinois.edu`.  
 
-#### -CMPSModulePath
+### -CMPSModulePath
 Optional string. Recommend leaving default.  
 The path to the ConfigurationManager Powershell module installed on the local machine (as part of the admin console).  
 Default is `$($ENV:SMS_ADMIN_UI_PATH)\..\ConfigurationManager.psd1`.  
