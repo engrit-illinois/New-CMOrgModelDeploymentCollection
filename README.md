@@ -37,7 +37,11 @@ Note: this module is currently written specifically for use in the College of En
 
 ### -App
 Required string.  
-The exact name of the application package for which to create collections and which to deploy to those collections.  
+The exact name of the application package for which to create collections and which to deploy to those collections.
+
+### -AppGroup
+Optional switch.
+If specified, the module will create a new Application Group deployment, rather than a deployment for just an Application.
 
 ### -ISOnly
 Optional switch.  
