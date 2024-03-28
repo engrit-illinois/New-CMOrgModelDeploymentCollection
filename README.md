@@ -19,7 +19,7 @@ Note: this module is currently written specifically for use in the College of En
 - Created collections will have a standard name format of `UIUC-ENGR-Deploy <app> (<purpose>)`, unless the `-ISOnly` switch parameter is specified.  
 - By default, created collections will show up in the root of `\Assets and Compliance\Overview\Device Collections`.
   - Specifying the `-MoveCollectionsToFolder` switch and `-CollectionsFolder` parameter will automatically move (all) the created collections to the specified folder.
-  - For org-level collections, the appropriate folder is `\DeviceCollection\UIUC-ENGR\Org shared collections\Deployments`.
+  - For org-level collections, the appropriate folder is `\DeviceCollection\UIUC-ENGR\.Org shared collections\Deployments`.
   - For IS collections, the appropriate folder is `\DeviceCollection\UIUC-ENGR\Instructional\Deployment Collections\Software\Installs`.
 - Note: The target app must be distributed to your distribution point before running this module to create collections. If it's not, the collections will be created, but the deployments to those collections will not. If this happens, simply delete the newly-created collections, distribute the app, and run the module again.
 
