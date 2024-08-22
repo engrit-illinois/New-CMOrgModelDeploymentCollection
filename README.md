@@ -37,7 +37,13 @@ Note: this module is currently written specifically for use in the College of En
 
 ### -App
 Required string.  
-The exact name of the application package for which to create collections and which to deploy to those collections.
+The exact name of the application package for which to create collections and which to deploy to those collections.  
+Supports Tab-Completion, though it can take a while depending on your MECM environment.  
+Recommend the following workflow:  
+1. Start typing your partial desired result.
+2. Tab.
+3. Ctrl-Space to display the full list.
+4. Navigate the list with arrow keys and select your desired application.
 
 ### -isAppGroup
 Optional switch.  

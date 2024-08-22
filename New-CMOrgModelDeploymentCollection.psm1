@@ -6,6 +6,15 @@ function New-CMOrgModelDeploymentCollection {
 
 	param(
 		[Parameter(Position=0,Mandatory=$true)]
+		[ArgumentCompleter( {
+			param ( $commandName,
+                    $parameterName,
+                    $wordToComplete,
+                    $commandAst,
+                    $fakeBoundParameters )
+			$possibleValues = (Get-CMApplication -Fast).LocalizedDisplayName | Sort-Object | Where-Object {$_ -like "*$wordToComplete*"} | ForEach-Object {"`"$_`""}
+			$possibleValues
+		})]
 		[string]$App,
 
 		[switch]$isAppGroup,
