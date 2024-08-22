@@ -37,9 +37,16 @@ Note: this module is currently written specifically for use in the College of En
 
 ### -App
 Required string.  
-The exact name of the application package for which to create collections and which to deploy to those collections.
+The exact name of the application package for which to create collections and which to deploy to those collections.  
+Supports Tab-Completion, though it can take a while depending on your MECM environment.  
+Recommend the following workflow:  
+1. `Prep-MECM`
+2. Start typing your partial desired result.
+3. Tab.
+4. Ctrl-Space to display the full list.
+5. Navigate the list with arrow keys and select your desired application.
 
-### -AppGroup
+### -isAppGroup
 Optional switch.  
 If specified, the module will create a new Application Group deployment, rather than a deployment for just an Application.
 
@@ -63,6 +70,11 @@ Collection will be named like `UIUC-ENGR-IS Deploy <app> (Required)`.
 Optional switch.  
 If specified, a "Required" collection/deployment with the "Uninstall" action will be created.  
 Collection will be named like `UIUC-ENGR-IS Uninstall <app> (Required)`.  
+
+### -AutoCloseExecutable
+Optional switch.  
+If specified, the created deployment will have the Install Behavior setting enabled, which will automatically stop the process specified on the "Install Behavior" tab of the given application deployment.  
+Only valid for Required deployments.
 
 ### -MoveCollectionsToFolder
 Optional switch.  
