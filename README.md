@@ -64,6 +64,11 @@ Optional switch.
 If specified, a "Required" collection/deployment with the "Uninstall" action will be created.  
 Collection will be named like `UIUC-ENGR-IS Uninstall <app> (Required)`.  
 
+### -AutoCloseExecutable
+Optional switch.  
+If specified, the created deployment will have the Install Behavior setting enabled, which will automatically stop the process specified on the "Install Behavior" tab of the given application deployment.  
+Only valid for Required deployments.
+
 ### -MoveCollectionsToFolder
 Optional switch.  
 If specified, (all of) the created collections will be moved to the folder specified by `-CollectionsFolder`, after their deployment has been created.  
