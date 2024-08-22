@@ -8,7 +8,7 @@ function New-CMOrgModelDeploymentCollection {
 		[Parameter(Position=0,Mandatory=$true)]
 		[string]$App,
 
-		[switch]$AppGroup,
+		[switch]$isAppGroup,
 		
 		[switch]$ISOnly,
 		
@@ -80,7 +80,7 @@ function New-CMOrgModelDeploymentCollection {
 	
 	function App-Exists {
 		log "Checking that specified application exists..."
-		if($AppGroup){
+		if($isAppGroup){
 			$appResult = Get-CMApplicationGroup -Name $App
 		}else{
 			$appResult = Get-CMApplication -Fast -Name $App
@@ -233,7 +233,7 @@ function New-CMOrgModelDeploymentCollection {
 		
 		# Make deployment to new collection
 		log "Creating deployment..." -L 1
-		if($AppGroup){
+		if($isAppGroup){
 			$depResult = New-CMApplicationGroupDeployment -Name $App -CollectionName $coll -DeployAction $action -DeployPurpose $purpose
 		}else{
 			$depResult = New-CMApplicationDeployment -Name $App -CollectionName $coll -DeployAction $action -DeployPurpose $purpose -UpdateSupersedence $true
