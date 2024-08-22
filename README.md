@@ -40,10 +40,11 @@ Required string.
 The exact name of the application package for which to create collections and which to deploy to those collections.  
 Supports Tab-Completion, though it can take a while depending on your MECM environment.  
 Recommend the following workflow:  
-1. Start typing your partial desired result.
-2. Tab.
-3. Ctrl-Space to display the full list.
-4. Navigate the list with arrow keys and select your desired application.
+1. `Prep-MECM`
+2. Start typing your partial desired result.
+3. Tab.
+4. Ctrl-Space to display the full list.
+5. Navigate the list with arrow keys and select your desired application.
 
 ### -isAppGroup
 Optional switch.  
