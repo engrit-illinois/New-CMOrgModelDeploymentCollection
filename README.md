@@ -1,6 +1,7 @@
 # Summary
 
-This is a module that takes a target application name, creates _standardized_ collections and deploys the target application to those collections.  
+This is a module that takes a target application name, creates _standardized_ collections based, and deploys the target application to those collections.  
+The org standards being implemented are documented here: https://uofi.atlassian.net/wiki/spaces/engritprivate/pages/36185162/MECM+-+Org+shared+collections+and+deployments?src=search.  
 This is not official MECM terminology, but we call these "deployment collections" because the collection's sole purpose is to be the single point of deployment for a given app, and any collections which should receive this deployment should simply be added as an include rule in the collection's membership rules. As described on the wiki page above, this prevents the same application from being redundantly deployed to many scattered collections.  
 
 ### Org-specific warning

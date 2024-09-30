@@ -168,7 +168,8 @@ function New-CMOrgModelDeploymentCollection {
 	}
 	
 	# Builds schedule object to send to New-CMDeviceCollection
-	# Hard coded to be 1am daily, as defined by the design decisions documented on the wiki
+	# Hard coded to be 1am daily, as defined by the design decisions documented on the wiki:
+	# https://uofi.atlassian.net/wiki/spaces/engritprivate/pages/36185162/MECM+-+Org+shared+collections+and+deployments?src=search
 	function Get-Sched {
 		log "Building schedule object for new collection's membership evaluation schedule (i.e. daily at 1am)..." -L 1
 		
