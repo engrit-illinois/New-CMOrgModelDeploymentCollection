@@ -4,6 +4,8 @@ This is a module that takes a target application name, creates _standardized_ co
 The org standards being implemented are documented here: https://uofi.atlassian.net/wiki/spaces/engritprivate/pages/36185162/MECM+-+Org+shared+collections+and+deployments?src=search.  
 This is not official MECM terminology, but we call these "deployment collections" because the collection's sole purpose is to be the single point of deployment for a given app, and any collections which should receive this deployment should simply be added as an include rule in the collection's membership rules. As described on the wiki page above, this prevents the same application from being redundantly deployed to many scattered collections.  
 
+For creating ad-hoc collections with a standardized evaluation schedule, but without any deployments special naming rules, see: https://github.com/engrit-illinois/New-CMOrgModelCollection.  
+
 ### Org-specific warning
 Note: this module is currently written specifically for use in the College of Engineering of the University of Illinois. It's published mostly for reference and requires refactoring for use in other organizations.  
 
