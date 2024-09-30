@@ -64,7 +64,7 @@ Optional switch.
 If specified, an "Available" deployment/collection with the "Install" action will be created.  
 Collection will be named like `UIUC-ENGR-IS Deploy <app> (Available)`.  
 
-### -SkipRequired
+### -Required
 Optional switch.  
 If specified, a "Required" deployment/collection with the "Install" action will be created.  
 Collection will be named like `UIUC-ENGR-IS Deploy <app> (Required)`.  
