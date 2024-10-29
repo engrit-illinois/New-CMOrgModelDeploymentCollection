@@ -29,9 +29,10 @@ function New-CMOrgModelDeploymentCollection {
 
 		[switch]$AutoCloseExecutable,
 		
-		[switch]$MoveCollectionsToFolder,
+		[string]$MoveCollectionsToFolder,
 		
-		[string]$CollectionsFolder = "\DeviceCollection\UIUC-ENGR\Instructional\Deployment Collections\Software\Installs",
+		[switch]$MoveCollectionsToISFolder,
+		[string]$ISCollectionsFolder = "\DeviceCollection\UIUC-ENGR\Instructional\Deployment Collections\Software\Installs",
 		
 		# Prefix that all unit's apps and collections have
 		# This is probably unique to the UofI environment
@@ -269,8 +270,20 @@ function New-CMOrgModelDeploymentCollection {
 		
 		# Move to collection to specified folder if requested
 		if($MoveCollectionsToFolder) {
-			$folderPath = "$($SiteCode):$($CollectionsFolder)"
-			log "-MoveCollectionsToFolder was specified. Moving new collection to `"$folderPath`"..." -L 1
+			$folderPath = $MoveCollectionsToFolder
+			log "-MoveCollectionsToFolder was specified." -L 1
+			
+		}
+		else {
+			if($MoveCollectionsToISFolder) {
+				$folderPath = $ISCollectionsFolder
+				log "-MoveCollectionsToISFolder was specified." -L 1
+			}
+		}
+		
+		if($folderPath) {
+			$folderPath = "$($SiteCode):$($folderPath)"
+			log "Moving new collection to `"$folderPath`"..." -L 1
 			Move-CMObject -InputObject $collResult -FolderPath $folderPath
 		}
 	}

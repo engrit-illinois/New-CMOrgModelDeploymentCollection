@@ -80,14 +80,20 @@ If specified, the created deployment will have the Install Behavior setting enab
 Only valid for Required deployments.
 
 ### -MoveCollectionsToFolder
-Optional switch.  
-If specified, (all of) the created collections will be moved to the folder specified by `-CollectionsFolder`, after their deployment has been created.  
-
-### -CollectionsFolder
 Optional string.  
-The folder to which created collections will be moved, if `-MoveCollectionsToFolder` is specified.  
-Default is `\DeviceCollection\UIUC-ENGR\Instructional\Deployment Collections\Software\Installs`, because that is the most common use case.  
-The actual folder path which gets used is based on this value as well as the value of `-SiteCode`, e.g. `MP0:\DeviceCollection\UIUC-ENGR\etc...`.  
+If specified, (all of) the created collections will be moved to the folder specified, after their deployment has been created.  
+The specified value should look something like `\DeviceCollection\UIUC-ENGR\.Org shared collections\Deployments\...`.  
+The actual folder path which gets used is based on the specified path value as well as the value of `-SiteCode`, e.g. `MP0:\DeviceCollection\UIUC-ENGR\etc...`.  
+
+### -MoveCollectionsToISFolder
+Optional switch.  
+If specified, (all of) the created collections will be moved to the folder specified by `-ISCollectionsFolder`, after their deployment has been created.  
+Has no effect if `-MoveCollectionsToFolder` is specified.  
+
+### -ISCollectionsFolder
+Optional string.  
+The folder to which created collections will be moved, if `-MoveCollectionsToISFolder` is specified.  
+Default is `\DeviceCollection\UIUC-ENGR\Instructional\Deployment Collections\Software\Installs`.  
 
 ### -Prefix
 Optional string.  
