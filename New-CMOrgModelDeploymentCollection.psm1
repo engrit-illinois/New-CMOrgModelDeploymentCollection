@@ -254,11 +254,11 @@ function New-CMOrgModelDeploymentCollection {
 		# Make deployment to new collection
 		log "Creating deployment..." -L 1
 		# Manually casting this switch to bool conversion because this simply didn't work any other way I tried -han44
-		[System.Boolean]$AutoCloseBoolean = $AutoCloseExecutable
+		[System.Boolean]$autoCloseBoolean = $AutoCloseExecutable
 		if($isAppGroup){
-			$depResult = New-CMApplicationGroupDeployment -Name $App -CollectionName $coll -DeployAction $action -DeployPurpose $purpose -AutoCloseExecutable $AutoCloseBoolean
+			$depResult = New-CMApplicationGroupDeployment -Name $App -CollectionName $coll -DeployAction $action -DeployPurpose $purpose -AutoCloseExecutable $autoCloseBoolean
 		}else{
-			$depResult = New-CMApplicationDeployment -Name $App -CollectionName $coll -DeployAction $action -DeployPurpose $purpose -UpdateSupersedence $true -AutoCloseExecutable $AutoCloseBoolean
+			$depResult = New-CMApplicationDeployment -Name $App -CollectionName $coll -DeployAction $action -DeployPurpose $purpose -UpdateSupersedence $true -AutoCloseExecutable $autoCloseBoolean
 		}
 		
 		if($depResult) {
