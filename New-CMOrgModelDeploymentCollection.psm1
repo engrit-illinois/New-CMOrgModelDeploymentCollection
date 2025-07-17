@@ -42,6 +42,8 @@ function New-CMOrgModelDeploymentCollection {
 		
 		[int]$DeploymentDelaySec=10,
 		
+		[switch]$DisablePsVersionCheck,
+		
 		[string]$SiteCode="MP0",
 		
 		[string]$Provider="sccmcas.ad.uillinois.edu",
@@ -62,6 +64,11 @@ function New-CMOrgModelDeploymentCollection {
 	}
 
 	function Test-SupportedPowershellVersion {
+		if($DisablePsVersionCheck) {
+			log "-DisablePsVersionCheck was specified. Skipping PowerShell version check."
+			return $true
+		}
+		
 		log "This custom module (and the overall ConfigurationManager Powershell module) only support Powershell v5.1. Checking Powershell version..."
 		
 		$ver = $Host.Version

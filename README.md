@@ -102,11 +102,16 @@ Default value is `UIUC-ENGR-`.
 Script behavior is undefined if your unit's collections/deployments do not use a consistent prefix.  
 This prefix methodology is probably somewhat unique to the mutli-tenant design of the UofI MECM infrastructure.  
 
-### - DeploymentDelaySec
+### -DeploymentDelaySec
 Optional integer.  
 The number of seconds to wait after creating a collection to deploy the app to that collection.  
 Default is `10`.  
 If you are getting errors with deployments, raise this value to e.g. `30` or so. It's possible MECM is being slow and not recognizing that the newly created collection exists before the script tries to deploy to it.  
+
+### -DisablePsVersionCheck
+Optional switch.  
+When specified the module will attempt to run regardless of the current version of PowerShell.  
+Normally, the module refuses to run if the current version of PowerShell is greater than 5.1.  
 
 ### -SiteCode
 Optional string. Recommend leaving default.  
