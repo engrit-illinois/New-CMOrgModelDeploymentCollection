@@ -105,8 +105,8 @@ This prefix methodology is probably somewhat unique to the mutli-tenant design o
 ### -DeploymentDelaySec
 Optional integer.  
 The number of seconds to wait after creating a collection to deploy the app to that collection.  
-Default is `10`.  
-If you are getting errors with deployments, raise this value to e.g. `30` or so. It's possible MECM is being slow and not recognizing that the newly created collection exists before the script tries to deploy to it.  
+Default is `30`.  
+If you are getting errors with deployments, try raising this value. It's possible MECM is being slow and not recognizing that the newly created collection exists before the script tries to deploy to it.  
 
 ### -DisablePsVersionCheck
 Optional switch.  

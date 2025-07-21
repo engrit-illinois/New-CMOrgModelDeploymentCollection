@@ -40,7 +40,7 @@ function New-CMOrgModelDeploymentCollection {
 		# i.e. "UIUC-ENGR-" assumes all collections and apps have exactly this prefix, and none have a prefix of e.g. "ENGR-UIUC"
 		[string]$Prefix="UIUC-ENGR-",
 		
-		[int]$DeploymentDelaySec=10,
+		[int]$DeploymentDelaySec=30,
 		
 		[switch]$DisablePsVersionCheck,
 		
@@ -249,7 +249,7 @@ function New-CMOrgModelDeploymentCollection {
 		
 		# Wait to make sure collection is created before trying to deploy to it
 		log "Waiting $DeploymentDelaySec seconds before deploying to new collection..." -L 1
-		Start-Sleep -Seconds 10
+		Start-Sleep -Seconds $DeploymentDelaySec
 		
 		# Make deployment to new collection
 		log "Creating deployment..." -L 1
@@ -257,7 +257,8 @@ function New-CMOrgModelDeploymentCollection {
 		[System.Boolean]$autoCloseBoolean = $AutoCloseExecutable
 		if($isAppGroup){
 			$depResult = New-CMApplicationGroupDeployment -Name $App -CollectionName $coll -DeployAction $action -DeployPurpose $purpose -AutoCloseExecutable $autoCloseBoolean
-		}else{
+		}
+		else {
 			$depResult = New-CMApplicationDeployment -Name $App -CollectionName $coll -DeployAction $action -DeployPurpose $purpose -UpdateSupersedence $true -AutoCloseExecutable $autoCloseBoolean
 		}
 		
