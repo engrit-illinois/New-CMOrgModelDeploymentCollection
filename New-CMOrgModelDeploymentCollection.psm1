@@ -75,7 +75,7 @@ function New-CMOrgModelDeploymentCollection {
 			return $true
 		}
 		
-		log "This custom module (and the overall ConfigurationManager PowerShell module) only support PowerShell v5.1. Checking PowerShell version..."
+		log "This custom module (and the overall ConfigurationManager PowerShell module) only supports PowerShell v5.1. Checking PowerShell version..."
 		
 		$ver = $Host.Version
 		log "PowerShell version is `"$($ver.Major).$($ver.Minor)`"." -L 1
