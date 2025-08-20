@@ -62,6 +62,12 @@ function New-CMOrgModelDeploymentCollection {
 		$ts = Get-Date -Format "yyyy-MM-dd HH:mm:ss:ffff"
 		Write-Host "[$ts] $msg"
 	}
+	
+	function Validate-SupportedPowershellVersion {
+		if(-not (Test-SupportedPowershellVersion)) {
+			Throw "Unsupported PowerShell version!"
+		}
+	}
 
 	function Test-SupportedPowershellVersion {
 		if($DisablePsVersionCheck) {
@@ -69,10 +75,10 @@ function New-CMOrgModelDeploymentCollection {
 			return $true
 		}
 		
-		log "This custom module (and the overall ConfigurationManager Powershell module) only support Powershell v5.1. Checking Powershell version..."
+		log "This custom module (and the overall ConfigurationManager PowerShell module) only support PowerShell v5.1. Checking PowerShell version..."
 		
 		$ver = $Host.Version
-		log "Powershell version is `"$($ver.Major).$($ver.Minor)`"." -L 1
+		log "PowerShell version is `"$($ver.Major).$($ver.Minor)`"." -L 1
 		if(
 			($ver.Major -eq 5) -and
 			($ver.Minor -eq 1)
@@ -299,37 +305,36 @@ function New-CMOrgModelDeploymentCollection {
 	function Do-Stuff {
 		
 		# Check that supported Powershell version is being used
-		if(Test-SupportedPowershellVersion) {
-			
-			$myPWD = $pwd.path
-			Prep-MECM
+		Validate-SupportedPowershellVersion
 		
-			# Check that the specified app exists
-			$exists = App-Exists
-			
-			# TODO: Check if app is distributed
-			# https://github.com/engrit-illinois/New-CMOrgModelDeploymentCollection/issues/3
-			
-			if($exists) {
-					
-				# Create specified collections/deployments
-				if($Available) {
-					New-Coll "Available"
-				}
-				if($Required) {
-					New-Coll "Required"
-				}
-				if($Uninstall) {
-					New-Coll "Uninstall"
-				}
+		$myPWD = $pwd.path
+		Prep-MECM
+	
+		# Check that the specified app exists
+		$exists = App-Exists
+		
+		# TODO: Check if app is distributed
+		# https://github.com/engrit-illinois/New-CMOrgModelDeploymentCollection/issues/3
+		
+		if($exists) {
 				
-				if((-not $Available) -and (-not $Required) -and (-not $Uninstall)) {
-					log "You must specify at least one of the following parameters: -Available, -Required, -Uninstall"
-				}
+			# Create specified collections/deployments
+			if($Available) {
+				New-Coll "Available"
+			}
+			if($Required) {
+				New-Coll "Required"
+			}
+			if($Uninstall) {
+				New-Coll "Uninstall"
 			}
 			
-			Set-Location $myPWD
+			if((-not $Available) -and (-not $Required) -and (-not $Uninstall)) {
+				log "You must specify at least one of the following parameters: -Available, -Required, -Uninstall"
+			}
 		}
+		
+		Set-Location $myPWD
 	}
 	
 	Do-Stuff
