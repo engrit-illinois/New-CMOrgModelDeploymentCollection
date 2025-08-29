@@ -26,6 +26,8 @@ function New-CMOrgModelDeploymentCollection {
 		[switch]$Required,
 		
 		[switch]$Uninstall,
+		
+		[switch]$DisableUpdateSupersedence,
 
 		[switch]$AutoCloseExecutable,
 		
@@ -259,13 +261,31 @@ function New-CMOrgModelDeploymentCollection {
 		
 		# Make deployment to new collection
 		log "Creating deployment..." -L 1
-		# Manually casting this switch to bool conversion because this simply didn't work any other way I tried -han44
-		[System.Boolean]$autoCloseBoolean = $AutoCloseExecutable
+		
+		$depParams = @{
+			Name = $App
+			CollectionName = $coll
+			DeployAction = $action
+			DeployPurpose = $purpose
+		}
+		
+		$depParams.AutoCloseExecutable = $false
+		if($AutoCloseExecutable) {
+			$depParams.AutoCloseExecutable = $true
+		}
+		 
+		if(-not $isAppGroup) {
+			$depParams.UpdateSupersedence = $true
+			if($DisableUpdateSupersedence) {
+				$depParams.UpdateSupersedence = $false
+			}
+		}
+		
 		if($isAppGroup){
-			$depResult = New-CMApplicationGroupDeployment -Name $App -CollectionName $coll -DeployAction $action -DeployPurpose $purpose -AutoCloseExecutable $autoCloseBoolean
+			$depResult = New-CMApplicationGroupDeployment @depParams
 		}
 		else {
-			$depResult = New-CMApplicationDeployment -Name $App -CollectionName $coll -DeployAction $action -DeployPurpose $purpose -UpdateSupersedence $true -AutoCloseExecutable $autoCloseBoolean
+			$depResult = New-CMApplicationDeployment @depParams
 		}
 		
 		if($depResult) {

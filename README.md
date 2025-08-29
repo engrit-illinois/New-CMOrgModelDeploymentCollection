@@ -74,6 +74,12 @@ Optional switch.
 If specified, a "Required" collection/deployment with the "Uninstall" action will be created.  
 Collection will be named like `UIUC-ENGR-IS Uninstall <app> (Required)`.  
 
+### -DisableUpdateSupersedence
+Optional switch.  
+By default deployments are created with automatic update supersedence enabled (if the application has a supersedence relationship configured).  
+If specified, deployments will be created without automatic update supersedence enabled, regardless.  
+Our org guidelines are generally to always enable automatic update supersedence on deployments if it's available on the application (see wiki link above). So only use this if you have a specific reason to disable supersedence, such as the application being interactive, or older versions not uninstalling cleanly, etc.  
+
 ### -AutoCloseExecutable
 Optional switch.  
 If specified, the created deployment will have the Install Behavior setting enabled, which will automatically stop the process specified on the "Install Behavior" tab of the given application deployment.  
