@@ -175,7 +175,7 @@ function New-CMOrgModelDeploymentCollection {
 		
 		$limitingColl = "$($Prefix)All Systems"
 		if($ISOnly) {
-			$limitingColl = "$($Prefix)Instructional"
+			$limitingColl = "$($Prefix)Instructional Desktops"
 		}
 		
 		log "Limiting collection will be `"$limitingColl`"." -L 2
